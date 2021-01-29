@@ -9,17 +9,21 @@ public class GM : MonoBehaviour
     public GameUI gameUI;
     private TargetViewCheck viewChecker;
     public float loseTime = 3.0f;
-    public float winTime = 6.0f;
-
-    private float winElapsed = 0;
     private float loseElapsed = 0;
 
-    private bool isGaming = true;
+    private bool isGaming = false;
+
+
+    // Loading UI
+    public CanvasGroup introCanvas;
+    public float introTime = 2.0f;
+    public float alphaFadeSpeed = 10.0f;
+
     // Start is called before the first frame update
     void Start()
     {
-        viewChecker = Target.GetComponent<TargetViewCheck>();
-       
+        viewChecker = Target.GetComponentInChildren<TargetViewCheck>();
+        StartCoroutine(IntroGame());
     }
 
     // Update is called once per frame
@@ -28,37 +32,64 @@ public class GM : MonoBehaviour
         if (isGaming == false)
             return;
 
-        if(viewChecker.isInCameraView)
+        if (viewChecker.isInCameraView)
         {
             loseElapsed = 0;
-            winElapsed += Time.deltaTime;
-          
         }
         else
         {
-            winElapsed = 0;
             loseElapsed += Time.deltaTime;
         }
-        gameUI.winTimeTxt.text = winElapsed.ToString();
-        gameUI.loseTimeTxt.text = loseElapsed.ToString();
+
+        gameUI.loseTimeTxt.text = loseElapsed.ToString("f2");
 
         if(loseElapsed >= loseTime)
         {
-            gameUI.gameOverTxt.text = "Ê§°Ü£¡";
-            gameUI.gameOverTxt.gameObject.SetActive(true);
-            gameUI.replayBtn.gameObject.SetActive(true);
-            isGaming = false;
+            EndGame(false);
         }
-        if (winElapsed >= winTime)
-        {
-            gameUI.gameOverTxt.text = "³É¹¦£¡";
-            gameUI.gameOverTxt.gameObject.SetActive(true);
-            gameUI.replayBtn.gameObject.SetActive(true);
-            isGaming = false;
-        }
+        
     }
    public void RestartGame()
     {
         SceneManager.LoadScene(1);
     }
+    private void EndGame(bool isSuccess)
+    {
+        isGaming = false;
+
+        if(isSuccess)
+        {
+            gameUI.gameOverTxt.text = "æˆåŠŸ";
+            gameUI.gameOverTxt.gameObject.SetActive(true);
+            gameUI.replayBtn.gameObject.SetActive(true);
+            isGaming = false;
+        }
+        else
+        {
+            gameUI.gameOverTxt.text = "å¤±è´¥";
+            gameUI.gameOverTxt.gameObject.SetActive(true);
+            gameUI.replayBtn.gameObject.SetActive(true);
+            isGaming = false;
+        }
+    }
+
+    
+    private IEnumerator IntroGame()
+    {
+        introCanvas.gameObject.SetActive(true);
+        yield return new WaitForSeconds(introTime);
+
+        while(introCanvas.alpha >0)
+        {
+            introCanvas.alpha -= Time.deltaTime * alphaFadeSpeed;
+            yield return null;
+        }
+        introCanvas.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(1.0f);
+
+        isGaming = true;
+        Target.GetComponent<TargetAI>().StartWalk();
+    }
+   
 }

@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class TargetViewCheck : MonoBehaviour
 {
-    [HideInInspector]
+   
     public bool isInCameraView = false;
     private Renderer render;
 
-    private void Start()
+    private void Awake()
     {
         render = GetComponent<Renderer>();
+        isInCameraView = render.isVisible;
     }
 
     private void Update()
     {
         isInCameraView = render.isVisible;
+       // print(isInCameraView.ToString());
     }
+  
 }

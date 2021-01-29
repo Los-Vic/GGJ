@@ -11,6 +11,7 @@ public class GameUI : MonoBehaviour
     public Text gameOverTxt;
     public Text loseTimeTxt;
     public Text winTimeTxt;
+    public Text lostTimeToEndTxt;
 
     // Update is called once per frame
     void Update()
