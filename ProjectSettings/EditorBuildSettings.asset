@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: 8df34d920400c491bbdbff2ce8d9d982
+    path: Assets/Scenes/Menu.unity
+    guid: de2d7a480a03a8a479045ad677db6d67
+  - enabled: 1
+    path: Assets/Scenes/Lowpoly.unity
+    guid: ecfef646f36124b8b9d7c13bdb4eced3
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 7d03b3a2aee264c94a17b00ea93e063b, type: 2}
