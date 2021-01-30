@@ -105,7 +105,7 @@ public class GM : MonoBehaviour
     }
     public void GameSuccess()
     {
-
+        SceneManager.LoadScene(2);
     }
    
 }
