@@ -13,6 +13,7 @@ public class SimpleAI : MonoBehaviour
     private float velocity = 0;
     public bool willChangeDic = false;
 
+    public bool startMove = false;
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,6 +29,8 @@ public class SimpleAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (startMove == false)
+            return;
 
         elapsed += Time.deltaTime;
 
@@ -59,5 +62,9 @@ public class SimpleAI : MonoBehaviour
             direction = -direction;
             TurnBody();
         }
+    }
+    public void StartMove()
+    {
+        startMove = true;
     }
 }

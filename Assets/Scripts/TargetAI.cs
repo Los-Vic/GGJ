@@ -14,6 +14,7 @@ public class TargetAI : MonoBehaviour
     private TargetViewCheck viewChecker;
 
     private bool startMoveFlag = false;
+    public GM _gm;
     // Start is called before the first frame update
     void Awake()
     {
@@ -57,9 +58,22 @@ public class TargetAI : MonoBehaviour
     {
         if (other.tag == "PlayerTrigger")
         {
+            
+            var pt = other.GetComponent<PlayerTrigger>();
+
+            if(pt.turnBody)
+            {
+                direction = -direction;
+                TurnBody();
+            }
+            velocity = pt.newVelocity;
+            pt.StartCrowd();
             Destroy(other.gameObject);
-            direction = -direction;
-            TurnBody();
+
+        }
+        else if(other.tag == "Finish")
+        {
+            _gm.GameSuccess();
         }
     }
 }

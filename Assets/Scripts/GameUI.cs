@@ -9,9 +9,9 @@ public class GameUI : MonoBehaviour
 {
     public Button replayBtn;
     public Text gameOverTxt;
+    public Text warnTxt;
     public Text loseTimeTxt;
-    public Text winTimeTxt;
-    public Text lostTimeToEndTxt;
+
 
     // Update is called once per frame
     void Update()

@@ -9,9 +9,10 @@ public class GM : MonoBehaviour
     public GameUI gameUI;
     private TargetViewCheck viewChecker;
     public float loseTime = 3.0f;
+    public float warningDelay = 1.0f;
     private float loseElapsed = 0;
 
-    private bool isGaming = false;
+    public bool isGaming = false;
 
 
     // Loading UI
@@ -19,11 +20,15 @@ public class GM : MonoBehaviour
     public float introTime = 2.0f;
     public float alphaFadeSpeed = 10.0f;
 
+
+ 
+
     // Start is called before the first frame update
     void Start()
     {
         viewChecker = Target.GetComponentInChildren<TargetViewCheck>();
         StartCoroutine(IntroGame());
+        gameUI.warnTxt.text = string.Format("Warning!You have {0}s to catch up target", loseTime - warningDelay);
     }
 
     // Update is called once per frame
@@ -35,44 +40,51 @@ public class GM : MonoBehaviour
         if (viewChecker.isInCameraView)
         {
             loseElapsed = 0;
+            Warn(false);
         }
         else
         {
             loseElapsed += Time.deltaTime;
+            if (loseElapsed > warningDelay)
+                Warn(true);
         }
 
-        gameUI.loseTimeTxt.text = loseElapsed.ToString("f2");
+        gameUI.loseTimeTxt.text = (loseElapsed - warningDelay).ToString("f2");
 
         if(loseElapsed >= loseTime)
         {
-            EndGame(false);
+            EndGame();
         }
         
     }
    public void RestartGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-    private void EndGame(bool isSuccess)
+    private void EndGame()
     {
         isGaming = false;
 
-        if(isSuccess)
+        gameUI.gameOverTxt.text = "Lost the target  !";
+        gameUI.gameOverTxt.gameObject.SetActive(true);
+        gameUI.replayBtn.gameObject.SetActive(true);
+        isGaming = false;
+        Warn(false);
+    }
+    private void Warn(bool isShow)
+    {
+        if(isShow)
         {
-            gameUI.gameOverTxt.text = "成功";
-            gameUI.gameOverTxt.gameObject.SetActive(true);
-            gameUI.replayBtn.gameObject.SetActive(true);
-            isGaming = false;
+            gameUI.warnTxt.gameObject.SetActive(true);
+            gameUI.loseTimeTxt.gameObject.SetActive(true);
+
         }
         else
         {
-            gameUI.gameOverTxt.text = "失败";
-            gameUI.gameOverTxt.gameObject.SetActive(true);
-            gameUI.replayBtn.gameObject.SetActive(true);
-            isGaming = false;
+            gameUI.warnTxt.gameObject.SetActive(false);
+            gameUI.loseTimeTxt.gameObject.SetActive(false);
         }
     }
-
     
     private IEnumerator IntroGame()
     {
@@ -90,6 +102,10 @@ public class GM : MonoBehaviour
 
         isGaming = true;
         Target.GetComponent<TargetAI>().StartWalk();
+    }
+    public void GameSuccess()
+    {
+
     }
    
 }
